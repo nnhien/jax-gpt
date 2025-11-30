@@ -122,7 +122,6 @@ class GenerativePretrainedTransformer(nn.Module):
   @nn.compact
   def __call__(self, token_id_sequences: jax.Array) -> jax.Array:
     batch_size, sequence_len = token_id_sequences.shape
-    del batch_size
 
     embedded_sequences = (self.token_embedding(token_id_sequences) +
                           self.positional_embedding(jnp.arange(sequence_len)))
@@ -131,12 +130,6 @@ class GenerativePretrainedTransformer(nn.Module):
         *self.attention_blocks,
         nn.LayerNorm()
     ])(embedded_sequences)
-    return next_token_embeddings
-
-  def logits(self, token_id_sequences: jax.Array) -> jax.Array:
-    batch_size, sequence_len = token_id_sequences.shape
-
-    next_token_embeddings = self(token_id_sequences) 
     next_token_embeddings = jnp.reshape(
         next_token_embeddings, (batch_size * sequence_len, self.embedding_dim)
     )

@@ -47,7 +47,7 @@ def step(
 ):
   train_state = dataclasses.replace(train_state, step=(train_state.step + 1))
   def compute_losses(variables: VariableTreeNode, x: jax.Array):
-    logits = module.apply(variables, x, method="logits")
+    logits = module.apply(variables, x)
     # Use the next token in the example's sequence as the label to evaluate
     # correctness for the loss computation. We lose the final token when
     # computing the loss since we have no meaningful label. C'est la vie.
